@@ -1,0 +1,15 @@
+_BASE_: "./MGNet-Cityscapes-Fine.yaml"
+MODEL:
+  SEM_SEG_HEAD:
+    NUM_CLASSES: 19
+DATASETS:
+  TRAIN: ("kitti_zhou_scene_seg_train",)
+  TEST: ("kitti_eigen_scene_seg_test",)
+INPUT:
+  MIN_SIZE_TRAIN: (384,)
+  MIN_SIZE_TEST: 384
+  MAX_SIZE_TRAIN: 1280
+  MAX_SIZE_TEST: 1280
+  CROP:
+    ENABLED: False
+  IGNORED_CATEGORIES_IN_DEPTH: ["sky"]

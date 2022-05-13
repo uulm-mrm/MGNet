@@ -1,0 +1,9 @@
+_BASE_: "./MGNet-Cityscapes-PseudoLabelGeneration.yaml"
+SOLVER:
+  IMS_PER_BATCH: 24
+DATASETS:
+  TRAIN: ("kitti_zhou_scene_seg_train",)
+  TEST: ("kitti_eigen_scene_seg_test",)
+INPUT:
+  MIN_SIZE_TEST: 384
+  MAX_SIZE_TEST: 1280

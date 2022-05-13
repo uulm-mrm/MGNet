@@ -1,0 +1,61 @@
+MODEL:
+  META_ARCHITECTURE: "MGNet"
+  WEIGHTS: "./weights/imagenet_weights.pkl"
+  PIXEL_MEAN: [ 123.675, 116.280, 103.530 ]
+  PIXEL_STD: [ 58.395, 57.120, 57.375 ]
+  BACKBONE:
+    FREEZE_AT: 0
+    NAME: "build_resnet_iabn_backbone"
+  RESNETS:
+    OUT_FEATURES: [ "res3", "res4", "res5" ]
+    DEPTH: 18
+    RES2_OUT_CHANNELS: 64
+  SEM_SEG_HEAD:
+    NAME: "MGNetSemSegHead"
+    IN_FEATURES: ["res3", "res4", "res5"]
+    COMMON_STRIDE: 8
+    HEAD_CHANNELS: 256
+    NUM_CLASSES: 20
+    LOSS_TYPE: "ohem"
+    OHEM_THRESHOLD: 0.7
+    OHEM_N_MIN: 262143  # (crop_width x crop_height / num_gpu) - 1, i.e. (1024 x 1024 / 4) -1
+  INS_EMBED_HEAD:
+    HEAD_CHANNELS: 256
+    CENTER_LOSS_WEIGHT: 200.0
+    OFFSET_LOSS_WEIGHT: 0.01
+DATASETS:
+  TRAIN: ("cityscapes_fine_scene_seg_train",)
+  TEST: ("cityscapes_fine_scene_seg_val",)
+SOLVER:
+  AMP:
+    ENABLED: True
+  WEIGHT_DECAY: 0.0
+  WEIGHT_DECAY_NORM: 0.0
+  WEIGHT_DECAY_BIAS: 0.0
+  BASE_LR: 0.0001
+  MAX_ITER: 60000
+  IMS_PER_BATCH: 12
+  CLIP_GRADIENTS:
+    ENABLED: True
+    CLIP_TYPE: "full_model"
+    CLIP_VALUE: 0.01
+    NORM_TYPE: 2.0
+INPUT:
+  FORMAT: "RGB"
+  MIN_SIZE_TRAIN: (512, 640, 704, 832, 896, 1024, 1152, 1216, 1344, 1408, 1536, 1664, 1728, 1856, 1920, 2048)
+  MIN_SIZE_TRAIN_SAMPLING: "choice"
+  MIN_SIZE_TEST: 1024
+  MAX_SIZE_TRAIN: 4096
+  MAX_SIZE_TEST: 2048
+  CROP:
+    ENABLED: True
+    TYPE: "absolute"
+    SIZE: (1024, 1024)
+    RANDOM_PAD_TO_CROP_SIZE: True
+  IGNORED_CATEGORIES_IN_DEPTH: ["ego vehicle", "sky"]
+DATALOADER:
+  NUM_WORKERS: 10
+TEST:
+  EVAL_PERIOD: 5000
+VERSION: 2
+CUDNN_BENCHMARK: True

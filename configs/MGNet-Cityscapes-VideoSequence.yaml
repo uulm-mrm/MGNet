@@ -1,0 +1,3 @@
+_BASE_: "./MGNet-Cityscapes-Fine.yaml"
+DATASETS:
+  TRAIN: ("cityscapes_scene_seg_train_video_sequence",)

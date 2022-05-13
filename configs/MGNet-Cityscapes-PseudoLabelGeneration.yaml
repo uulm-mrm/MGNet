@@ -1,0 +1,8 @@
+_BASE_: "./MGNet-Cityscapes-Fine.yaml"
+WITH_DEPTH: False
+DATASETS:
+  TRAIN: ("cityscapes_scene_seg_train_video_sequence",)
+TEST:
+  AMP:
+    ENABLED: False
+  MSC_FLIP_EVAL: True

@@ -1,0 +1,12 @@
+numpy>=1.21.4
+fvcore>=0.1.5
+Pillow>=8.2.0
+git+https://github.com/cocodataset/panopticapi.git
+opencv-python>=4.1.2.30
+matplotlib>=3.5.0
+tabulate>=0.8.9
+open3d>=0.13.0
+tqdm>=4.62.3
+onnx>=1.10.1
+setuptools==59.4.0
+inplace-abn>=1.1.0
