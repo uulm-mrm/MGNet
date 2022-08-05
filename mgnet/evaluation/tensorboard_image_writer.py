@@ -66,28 +66,40 @@ class TensorboardImageWriter(DatasetEvaluator):
 
         # Add images to tensorboard writer
         if len(self._panoptic_prediction_list) > 0:
-            height, width = self._panoptic_prediction_list[0].shape[:2]
-            for idx, val in enumerate(self._panoptic_prediction_list):
-                if val.shape[:2] != (height, width):
-                    self._panoptic_prediction_list[idx] = cv2.resize(val, (width, height))
-
             self._writer.add_images(
                 "Panoptic predictions",
-                np.stack(self._panoptic_prediction_list),
+                np.stack(self._pad_images_in_list(self._panoptic_prediction_list)),
                 global_step=TensorboardImageWriter._step,
                 dataformats="NHWC",
             )
         if len(self._depth_prediction_list) > 0:
-            height, width = self._depth_prediction_list[0].shape[:2]
-            for idx, val in enumerate(self._depth_prediction_list):
-                if val.shape[:2] != (height, width):
-                    self._depth_prediction_list[idx] = cv2.resize(val, (width, height))
-
             self._writer.add_images(
                 "Depth predictions",
-                np.stack(self._depth_prediction_list),
+                np.stack(self._pad_images_in_list(self._depth_prediction_list)),
                 global_step=TensorboardImageWriter._step,
                 dataformats="NHWC",
             )
 
         self._writer.flush()
+
+    @staticmethod
+    def _pad_images_in_list(image_list):
+        padded_image_list = []
+
+        max_h, max_w = 0, 0
+        for idx, val in enumerate(image_list):
+            max_h = max(max_h, val.shape[0])
+            max_w = max(max_w, val.shape[1])
+        for idx, val in enumerate(image_list):
+            padded_image_list.append(
+                cv2.copyMakeBorder(
+                    val,
+                    0,
+                    max_h - val.shape[0],
+                    0,
+                    max_w - val.shape[1],
+                    cv2.BORDER_CONSTANT,
+                    (0, 0, 0),
+                )
+            )
+        return padded_image_list
