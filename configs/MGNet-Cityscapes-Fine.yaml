@@ -18,7 +18,7 @@ MODEL:
     NUM_CLASSES: 20
     LOSS_TYPE: "ohem"
     OHEM_THRESHOLD: 0.7
-    OHEM_N_MIN: 262143  # (crop_width x crop_height / num_gpu) - 1, i.e. (1024 x 1024 / 4) -1
+    OHEM_N_MIN: 262143  # (crop_width x crop_height / 4) - 1, i.e. (1024 x 1024 / 4) -1
   INS_EMBED_HEAD:
     HEAD_CHANNELS: 256
     CENTER_LOSS_WEIGHT: 200.0
